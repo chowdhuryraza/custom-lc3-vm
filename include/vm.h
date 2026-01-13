@@ -9,7 +9,9 @@ extern uint16_t memory[MEMORY_MAX]; // Memory Array
 extern uint16_t reg[REG_COUNT]; // Registers Array
 
 /* VM Functions */
-int read_image(const char* path);
+int readImage(const char* path);
+void readImageFile(FILE* image);
+uint16_t swap16(uint16_t addr);
 
 
 #endif
