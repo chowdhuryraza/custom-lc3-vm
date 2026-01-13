@@ -1,55 +1,41 @@
-#include <stdint.h>
+#include <stdio.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/termios.h>
+#include <sys/mman.h>
 
-#define MEMORY_MAX (1 << 16)
-uint16_t memory[MEMORY_MAX]; // Memory Storage Limit (128 KB)
+#include "vm.h"
 
-typedef enum {
-    /* General Purpose Registers */
-    REG_R0 = 0,
-    REG_R1,
-    REG_R2,
-    REG_R3,
-    REG_R4,
-    REG_R5,
-    REG_R6,
-    REG_R7,
+int main(int argc, const char* argv[]){
+    /* Handling Improper/Broken Usage */
+    if (argc < 2){
+        printf("Usage: vm [image-file1] ...\n");
+        exit(2);
+    }
 
-    /* Program Counter */
-    REG_PC,
+    for (int i = 1; i < argc; ++i){
+        if (!read_image(argv[i])){
+            printf("Image %s Failed to Load\n", argv[i]);
+            exit(1);
+        }
+    }
+    
 
-    /* Condition Flags Register */
-    REG_COND,
 
-    REG_COUNT
-} Register;
+    /* Conditional Flag Set To Z Flag */
+    reg[REG_COND] = FL_ZRO;
 
-uint16_t reg[REG_COUNT];
+    enum { PC_START = 0x3000 }; /* Default Program Counter Start */
+    reg[REG_PC] = PC_START;
 
-/* Opcodes */
-enum
-{
-    OP_BR = 0, /* Branch */
-    OP_ADD,    /* Add  */
-    OP_LD,     /* Load */
-    OP_ST,     /* Store */
-    OP_JSR,    /* Jump Register */
-    OP_AND,    /* Bitwise And */
-    OP_LDR,    /* Load Register */
-    OP_STR,    /* Store Register */
-    OP_RTI,    /* Unused */
-    OP_NOT,    /* Bitwise Not */
-    OP_LDI,    /* Load Indirect */
-    OP_STI,    /* Store Indirect */
-    OP_JMP,    /* Jump */
-    OP_RES,    /* Reserved (Unused) */
-    OP_LEA,    /* Load Effective Address */
-    OP_TRAP    /* Execute Trap */
-};
+    int currRunning = 1;
 
-/* Previous Calculation Condition Flags */
-enum
-{
-    FL_POS = 1 << 0, /* Positive */
-    FL_ZRO = 1 << 1, /* Zero */
-    FL_NEG = 1 << 2, /* Negative */
-};
+    while (currRunning){
+        
+    }
+
+}

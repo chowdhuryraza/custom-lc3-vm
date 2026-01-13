@@ -1,0 +1,21 @@
+# ===== Editors =====
+.vscode/
+.idea/
+*.swp
+
+# ===== Build Artifacts =====
+*.o
+*.a
+*.so
+*.exe
+*.out
+build/
+bin/
+
+# ===== Debug / Temp =====
+*.log
+*.tmp
+
+# ===== OS Files =====
+.DS_Store
+Thumbs.db
