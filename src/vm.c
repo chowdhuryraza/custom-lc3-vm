@@ -40,6 +40,13 @@ uint16_t checkKey(void)
     return select(1, &readFds, NULL, NULL, &timeout) != 0;
 }
 
+/* Restore Settings on Signal */
+void handleInterrupt(int signal){
+    restoreInputBuffering();
+    printf("\n");
+    exit(-2);
+}
+
 #include "vm.h"
 
 uint16_t swap16(uint16_t addr){
