@@ -8,6 +8,38 @@
 #include <sys/termios.h>
 #include <sys/mman.h>
 
+/* Keyboard Input Handling */
+
+static struct termios originalTermios; // Original Terminal State
+
+void disableInputBuffering(void)
+{
+    tcgetattr(STDIN_FILENO, &originalTermios);
+
+    struct termios newTermios = originalTermios;
+    newTermios.c_lflag &= ~(ICANON | ECHO);
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+}
+
+void restoreInputBuffering(void)
+{
+    tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
+}
+
+uint16_t checkKey(void)
+{
+    fd_set readFds;
+    FD_ZERO(&readFds);
+    FD_SET(STDIN_FILENO, &readFds);
+
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
+
+    return select(1, &readFds, NULL, NULL, &timeout) != 0;
+}
+
 #include "vm.h"
 
 uint16_t swap16(uint16_t addr){
@@ -53,7 +85,7 @@ void memoryWrite(uint16_t addr, uint16_t val){
 
 uint16_t memoryRead(uint16_t addr){
     if(addr == MR_KBSR){
-        
+
     }
 }
 
