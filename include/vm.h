@@ -13,5 +13,8 @@ int readImage(const char* path);
 void readImageFile(FILE* image);
 uint16_t swap16(uint16_t addr);
 
+void memoryWrite(uint16_t addr, uint16_t val);
+uint16_t memoryRead(uint16_t addr);
+
 
 #endif

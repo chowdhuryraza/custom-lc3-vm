@@ -56,4 +56,11 @@ enum
 };
 
 
+/* Memory Mapped Registers -> Special Hardware Device Interactions */
+enum
+{
+    MR_KBSR = 0xFE00, /* Keyboard Status (Key Pressed?) */
+    MR_KBDR = 0xFE02  /* Keyboard Data (Which Key?)*/
+};
+
 #endif

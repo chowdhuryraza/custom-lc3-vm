@@ -47,6 +47,16 @@ int readImage(const char* path){
     return 1;
 }
 
+void memoryWrite(uint16_t addr, uint16_t val){
+    memory[addr] = val;
+}
+
+uint16_t memoryRead(uint16_t addr){
+    if(addr == MR_KBSR){
+        
+    }
+}
+
 int main(int argc, const char* argv[]){
     /* Handling Improper/Broken Usage */
     if (argc < 2){
