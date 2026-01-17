@@ -92,7 +92,34 @@ void memoryWrite(uint16_t addr, uint16_t val){
 
 uint16_t memoryRead(uint16_t addr){
     if(addr == MR_KBSR){
+        if (checkKey()){
+            memory[MR_KBSR] = (1 << 15);
+            memory[MR_KBDR] = getchar();
+        }
+        else{
+            memory[MR_KBSR] = 0;
+        }
+    }
 
+    return memory[addr];
+}
+
+uint16_t signExtend(uint16_t x, int bitCount){
+    if ((x >> (bitCount - 1)) & 1){
+        x |= (0xFFFF << bitCount);
+    }
+}
+
+/* Updating Condition Flags */
+void updateFlags(uint16_t r){
+    if (reg[r] == 0){
+        reg[REG_COND] = FL_ZRO;
+    }
+    else if (reg[r] >> 15){ // Most Significant Bit == 1 --> Negative Sign
+        reg[REG_COND] = FL_NEG;
+    }
+    else{
+        reg[REG_COND] = FL_POS;
     }
 }
 

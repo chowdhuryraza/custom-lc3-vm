@@ -16,5 +16,8 @@ uint16_t swap16(uint16_t addr);
 void memoryWrite(uint16_t addr, uint16_t val);
 uint16_t memoryRead(uint16_t addr);
 
+uint16_t signExtend(uint16_t x, int bitCount);
+void updateFlags(uint16_t r);
+
 
 #endif
