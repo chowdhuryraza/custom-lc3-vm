@@ -136,9 +136,11 @@ int main(int argc, const char* argv[]){
             exit(1);
         }
     }
+
+    /* Terminal Input Handling */
+    signal(SIGINT, handleInterrupt);
+    disableInputBuffering();
     
-
-
     /* Conditional Flag Set To Z Flag */
     reg[REG_COND] = FL_ZRO;
 
@@ -148,7 +150,129 @@ int main(int argc, const char* argv[]){
     int currRunning = 1;
 
     while (currRunning){
+
+        /* Get Instruction & OP Code */
+        uint16_t instruction = memoryRead(reg[REG_PC]++);
+        uint16_t opCode = instruction >> 12;
+
+        switch (opCode){
+            case OP_BR:
+            {
+                /* Branch */
+                /* Check Condition Flags & Update PC If Condition Met */
+                break;
+            }
+
+            case OP_ADD:
+            {
+                /* Add */
+                /* reg[dr] = reg[sr1] + (reg[sr2] or imm5) */
+                break;
+            }
+
+            case OP_LD:
+            {
+                /* Load */
+                /* reg[dr] = mem[PC + offset] */
+                break;
+            }
+
+            case OP_ST:
+            {
+                /* Store */
+                /* mem[PC + offset] = reg[sr] */
+                break;
+            }
+
+            case OP_JSR:
+            {
+                /* Jump to Subroutine */
+                /* Save PC in R7, Then Jump */
+                break;
+            }
+
+            case OP_AND:
+            {
+                /* Bitwise AND */
+                /* reg[dr] = reg[sr1] & (reg[sr2] or imm5) */
+                break;
+            }
+
+            case OP_LDR:
+            {
+                /* Load Register */
+                /* reg[dr] = mem[reg[base] + offset] */
+                break;
+            }
+
+            case OP_STR:
+            {
+                /* Store Register */
+                /* mem[reg[base] + offset] = reg[sr] */
+                break;
+            }
+
+            case OP_RTI:
+            {
+                /* Return From Interrupt (Unused) */
+                break;
+            }
+
+            case OP_NOT:
+            {
+                /* Bitwise NOT */
+                /* reg[dr] = ~reg[sr] */
+                break;
+            }
+
+            case OP_LDI:
+            {
+                /* Load Indirect */
+                /* reg[dr] = mem[mem[PC + offset]] */
+                break;
+            }
+
+            case OP_STI:
+            {
+                /* Store Indirect */
+                /* mem[mem[PC + offset]] = reg[sr] */
+                break;
+            }
+
+            case OP_JMP:
+            {
+                /* Jump */
+                /* PC = reg[base] */
+                break;
+            }
+
+            case OP_RES:
+            {
+                /* Reserved (Unused) */
+                break;
+            }
+
+            case OP_LEA:
+            {
+                /* Load Effective Address */
+                /* reg[dr] = PC + offset */
+                break;
+            }
+
+            case OP_TRAP:
+            {
+                /* Trap (System Call) */
+                /* Execute Trap Routine */
+                break;
+            }
+
+            default:
+            {
+                abort();
+                break;
+            }
+        }
         
     }
-
+    restoreInputBuffering();
 }
