@@ -360,7 +360,7 @@ int main(int argc, const char* argv[]){
             {
                 /* Load Effective Address */
                 /* reg[dr] = PC + offset */
-                
+
                 uint16_t r0 = (instruction >> 9) & 0x7;
                 uint16_t pcOffset = signExtend(instruction & 0x1FF, 9);
 
@@ -371,8 +371,102 @@ int main(int argc, const char* argv[]){
 
             case OP_TRAP:
             {
-                /* Trap (System Call) */
-                /* Execute Trap Routine */
+                /* Trap (System Call) - Interacting w/ I/O Devices */
+                /* Execute Trap Routine - API or OS for LC-3 */
+
+                /* Save Return Address In R7 */
+                reg[REG_R7] = reg[REG_PC];
+
+                /* Extract Trap Vector */
+                uint16_t trapVector = instruction & 0xFF;
+
+                switch (trapVector)
+                {
+                    case TRAP_GETC:
+                    {
+                        /* Read Single Character From Keyboard (No Echo) */
+                        reg[REG_R0] = (uint16_t)getchar();
+                        updateFlags(REG_R0);
+                        break;
+                    }
+
+                    case TRAP_OUT:
+                    {
+                        /* Output Character Stored in R0 */
+                        putc((char)reg[REG_R0], stdout);
+                        fflush(stdout);
+                        break;
+                    }
+
+                    case TRAP_PUTS:
+                    {
+                        /* Output Null-Terminated String (One Character Per Word) */
+                        uint16_t *charPtr = memory + reg[REG_R0];
+
+                        while (*charPtr)
+                        {
+                            putc((char)*charPtr, stdout);
+                            ++charPtr;
+                        }
+
+                        fflush(stdout);
+                        break;
+                    }
+
+                    case TRAP_IN:
+                    {
+                        /* Prompt User And Read Single Character (Echoed) */
+                        printf("Enter a character: ");
+
+                        char inputChar = getchar();
+                        putc(inputChar, stdout);
+                        fflush(stdout);
+
+                        reg[REG_R0] = (uint16_t)inputChar;
+                        updateFlags(REG_R0);
+                        break;
+                    }
+
+                    case TRAP_PUTSP:
+                    {
+                        /* Output Packed String (Two Characters Per Word) */
+                        uint16_t *charPtr = memory + reg[REG_R0];
+
+                        while (*charPtr)
+                        {
+                            char lowByte = (*charPtr) & 0xFF;
+                            putc(lowByte, stdout);
+
+                            char highByte = (*charPtr) >> 8;
+                            if (highByte)
+                            {
+                                putc(highByte, stdout);
+                            }
+
+                            ++charPtr;
+                        }
+
+                        fflush(stdout);
+                        break;
+                    }
+
+                    case TRAP_HALT:
+                    {
+                        /* Halt Program Execution */
+                        puts("HALT");
+                        fflush(stdout);
+                        currRunning = 0;
+                        break;
+                    }
+
+                    default:
+                    {
+                        /* Invalid Trap Vector */
+                        abort();
+                        break;
+                    }
+                
+                }
                 break;
             }
 
