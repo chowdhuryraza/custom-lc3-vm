@@ -318,6 +318,12 @@ int main(int argc, const char* argv[]){
             {
                 /* Load Indirect */
                 /* reg[dr] = mem[mem[PC + offset]] */
+
+                uint16_t r0 = (instruction >> 9) & 0x7;
+                uint16_t pcOffset = signExtend(instruction & 0x1FF, 9);
+
+                reg[r0] = memoryRead(memoryRead(reg[REG_PC] + pcOffset));
+                updateFlags(r0);
                 break;
             }
 
@@ -325,6 +331,11 @@ int main(int argc, const char* argv[]){
             {
                 /* Store Indirect */
                 /* mem[mem[PC + offset]] = reg[sr] */
+                
+                uint16_t r0 = (instruction >> 9) & 0x7;
+                uint16_t pcOffset = signExtend(instruction & 0x1FF, 9);
+
+                memoryWrite(memoryRead(reg[REG_PC] + pcOffset), reg[r0]);
                 break;
             }
 
