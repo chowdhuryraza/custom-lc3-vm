@@ -272,6 +272,13 @@ int main(int argc, const char* argv[]){
             {
                 /* Load Register */
                 /* reg[dr] = mem[reg[base] + offset] */
+
+                uint16_t r0 = (instruction >> 9) & 0x7;
+                uint16_t r1 = (instruction >> 6) & 0x7;
+                uint16_t offset = signExtend(instruction & 0x3F, 6);
+
+                reg[r0] = memoryRead(reg[r1] + offset);
+                updateFlags(r0);
                 break;
             }
 
@@ -279,6 +286,12 @@ int main(int argc, const char* argv[]){
             {
                 /* Store Register */
                 /* mem[reg[base] + offset] = reg[sr] */
+
+                uint16_t r0 = (instruction >> 9) & 0x7;
+                uint16_t r1 = (instruction >> 6) & 0x7;
+                uint16_t offset = signExtend(instruction & 0x3F, 6);
+
+                memoryWrite(reg[r1] + offset, reg[r0]);
                 break;
             }
 
