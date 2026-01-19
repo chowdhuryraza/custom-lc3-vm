@@ -213,6 +213,23 @@ int main(int argc, const char* argv[]){
             {
                 /* Bitwise AND */
                 /* reg[dr] = reg[sr1] & (reg[sr2] or imm5) */
+                
+                uint16_t r0 = (instruction >> 9) & 0x7; // dr
+                uint16_t r1 = (instruction >> 6) & 0x7; // sr1
+                uint16_t immFlag = (instruction >> 5) & 0x1;
+
+                if (immFlag)
+                {
+                    uint16_t imm5 = signExtend(instruction & 0x1F, 5);
+                    reg[r0] = reg[r1] & imm5;
+                }
+                else
+                {
+                    uint16_t r2 = instruction & 0x7; // sr2
+                    reg[r0] = reg[r1] & reg[r2];
+                }
+
+                updateFlags(r0);
                 break;
             }
 
