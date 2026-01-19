@@ -160,6 +160,15 @@ int main(int argc, const char* argv[]){
             {
                 /* Branch */
                 /* Check Condition Flags & Update PC If Condition Met */
+
+                uint16_t pcOffset = signExtend(instruction & 0x1FF, 9);
+                uint16_t condFlag = (instruction >> 9) & 0x7;
+
+                if (condFlag & reg[REG_COND])
+                {
+                    reg[REG_PC] += pcOffset;
+                }
+
                 break;
             }
 
@@ -250,6 +259,7 @@ int main(int argc, const char* argv[]){
             case OP_RTI:
             {
                 /* Return From Interrupt (Unused) */
+                abort();
                 break;
             }
 
@@ -283,12 +293,16 @@ int main(int argc, const char* argv[]){
             {
                 /* Jump */
                 /* PC = reg[base] */
+                
+                uint16_t r1 = (instruction >> 6) & 0x7;
+                reg[REG_PC] = reg[r1];
                 break;
             }
 
             case OP_RES:
             {
                 /* Reserved (Unused) */
+                abort();
                 break;
             }
 
