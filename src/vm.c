@@ -215,6 +215,21 @@ int main(int argc, const char* argv[]){
             {
                 /* Jump to Subroutine */
                 /* Save PC in R7, Then Jump */
+
+                uint16_t longFlag = (instruction >> 11) & 1;
+                reg[REG_R7] = reg[REG_PC];
+
+                if (longFlag)
+                {
+                    uint16_t pcOffset = signExtend(instruction & 0x7FF, 11);
+                    reg[REG_PC] += pcOffset;
+                }
+                else
+                {
+                    uint16_t r1 = (instruction >> 6) & 0x7;
+                    reg[REG_PC] = reg[r1];
+                }
+
                 break;
             }
 
@@ -293,7 +308,7 @@ int main(int argc, const char* argv[]){
             {
                 /* Jump */
                 /* PC = reg[base] */
-                
+
                 uint16_t r1 = (instruction >> 6) & 0x7;
                 reg[REG_PC] = reg[r1];
                 break;
