@@ -257,6 +257,11 @@ int main(int argc, const char* argv[]){
             {
                 /* Bitwise NOT */
                 /* reg[dr] = ~reg[sr] */
+                uint16_t r0 = (instruction >> 9) & 0x7; // dr
+                uint16_t r1 = (instruction >> 6) & 0x7; // sr
+
+                reg[r0] = ~reg[r1];
+                updateFlags(r0);
                 break;
             }
 
