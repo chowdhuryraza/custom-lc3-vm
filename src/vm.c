@@ -51,8 +51,8 @@ void handleInterrupt(int signal){
 #include "vm.h"
 
 /* VM State */
-extern uint16_t memory[MEMORY_MAX]; // Memory Array
-extern uint16_t reg[REG_COUNT]; // Registers Array
+uint16_t memory[MEMORY_MAX]; // Memory Array
+uint16_t reg[REG_COUNT]; // Registers Array
 
 uint16_t swap16(uint16_t addr){
     return (addr << 8) | (addr >> 8);
