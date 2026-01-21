@@ -42,12 +42,17 @@ uint16_t checkKey(void)
 
 /* Restore Settings on Signal */
 void handleInterrupt(int signal){
+    (void)signal;  /* Explicitly Marking Unused */
     restoreInputBuffering();
     printf("\n");
     exit(-2);
 }
 
 #include "vm.h"
+
+/* VM State */
+extern uint16_t memory[MEMORY_MAX]; // Memory Array
+extern uint16_t reg[REG_COUNT]; // Registers Array
 
 uint16_t swap16(uint16_t addr){
     return (addr << 8) | (addr >> 8);
@@ -108,6 +113,7 @@ uint16_t signExtend(uint16_t x, int bitCount){
     if ((x >> (bitCount - 1)) & 1){
         x |= (0xFFFF << bitCount);
     }
+    return x;
 }
 
 /* Updating Condition Flags */
